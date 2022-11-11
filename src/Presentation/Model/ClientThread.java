@@ -25,8 +25,6 @@ public class ClientThread extends Thread {
     }
 
     public void run() {
-
-
         try {
             inputStream = new ObjectInputStream(clientSocket.getInputStream());
             outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
@@ -60,14 +58,14 @@ public class ClientThread extends Thread {
                             }
                         }
 
-                        while (true) {
+                        do {
                             if (this.isAuthenticated) {
                                 Message receivedMessage = (Message) this.inputStream.readObject();
-                                System.out.format("Message: %s | From: %s | To: %s", receivedMessage.getText(), receivedMessage.getSenderId(), receivedMessage.getReceiverId());
+                                System.out.format("Message: %s | From: %s | To: %s\n", receivedMessage.getText(), receivedMessage.getSenderId(), receivedMessage.getReceiverId());
                             } else {
                                 break;
                             }
-                        }
+                        } while (((String) this.inputStream.readUTF()).equals("continue"));
                         break;
 
                     case "registerUser":

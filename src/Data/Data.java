@@ -6,14 +6,11 @@ import Presentation.Model.ConnectionServer;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
-import java.util.Scanner;
-
 
 
 public class Data {
@@ -30,9 +27,9 @@ public class Data {
     private MainController mainController;
 
 
-    public Data(MainController mainController) {
+    public Data(MainController mainController, Connection connection) {
         this.mainController = mainController;
-
+        this.connection = connection;
     }
 
     public boolean addUser(String name , String password){
@@ -47,9 +44,9 @@ public class Data {
                 PreparedStatement statement = connection.prepareStatement(sql);
 
                 //setting parameter values
-                statement.setString(2,name);
-                statement.setString(3, password);
-                statement.setBoolean(4, false);
+                statement.setString(1,name);
+                statement.setString(2, password);
+                statement.setBoolean(3, false);
                 //executing query which will return an integer value
                 int rowsInserted = statement.executeUpdate();
 

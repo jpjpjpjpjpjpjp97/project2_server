@@ -10,20 +10,17 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 public class ConnectionServer {
-
     Connection connection;
-
     //logger object for saving logs
     private static final Logger logger = LogManager.getLogger(ConnectionServer.class);
-
     public Connection connectionDataBase(){
 
         String password = "Leosanpo16";
         String usuario = "root";
-        String url = "jdbc:mysql://localhost:3306/project2?user=" + usuario + "&password=" + password +"&serverTimezone=UTC";
+        String url = "jdbc:mysql://localhost:3306/project2";
 
         try {
-            connection = DriverManager.getConnection(url);
+            connection = DriverManager.getConnection(url, "root", "");
             if(connection != null){
                 System.out.println("You have successfully connected to the database");
             }
