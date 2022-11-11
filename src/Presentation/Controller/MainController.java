@@ -31,4 +31,12 @@ public class MainController {
     public boolean registerUser(String username, String password) {
       return logic.registerUser(username , password);
     }
+
+    public int updateUser(int id ,String username, String password) {
+        return logic.updateUser(id,username , password);
+    }
+
+    public int deleteUser(int id) {
+        return logic.deleteUser(id);
+    }
 }

@@ -85,6 +85,40 @@ public class ClientThread extends Thread {
                         }
                         break;
 
+                    case "updateUser":
+                        String upId = ((String) this.inputStream.readUTF());
+                        String upUserName = ((String) this.inputStream.readUTF());
+                        String upPassword = ((String) this.inputStream.readUTF());
+                        System.out.format("update username: %s | update Pwd: %s \n", upUserName, upPassword);
+
+                        synchronized (this) {
+                            if (this.updateUser(Integer.parseInt(upId) , upUserName , upPassword) != 0) {
+                                outputStream.writeUTF("Successfully Updated");
+                                outputStream.flush();
+                            } else {
+                                outputStream.writeUTF("Not Updated");
+                                outputStream.flush();
+                            }
+
+                        }
+                        break;
+
+                    case "deleteUser":
+                        String deleteId = ((String) this.inputStream.readUTF());
+                        System.out.format("delete id: %s \n", deleteId);
+
+                        synchronized (this) {
+                            if (this.deleteUser(Integer.parseInt(deleteId)) != 0) {
+                                outputStream.writeUTF("Successfully Deleted");
+                                outputStream.flush();
+                            } else {
+                                outputStream.writeUTF("Not Deleted");
+                                outputStream.flush();
+                            }
+
+                        }
+                        break;
+
                     case "close":
                         close = true;
                         break;
@@ -110,5 +144,15 @@ public class ClientThread extends Thread {
     private boolean registerUser(String username, String password) {
         return mainController.registerUser(username, password);
     }
+
+    private int updateUser(int id,String username, String password) {
+        return mainController.updateUser(id,username, password);
+    }
+
+    private int deleteUser(int id) {
+        return mainController.deleteUser(id);
+    }
+
+
 
 }

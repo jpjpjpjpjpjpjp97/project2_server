@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 
@@ -37,7 +38,6 @@ public class Data {
             //sql statement for inserting record
             String sql = "INSERT INTO user (username, password , online) VALUES (?, ? , ?)";
 
-
             //getting input from user
 
             try {
@@ -57,6 +57,26 @@ public class Data {
             }
             return false;
         }
+
+    public int updateUser(int id ,String name , String password){
+
+        try (Statement stmt = connection.createStatement()) {
+            return stmt.executeUpdate("UPDATE user SET " + "username='" + name + "',password='" + password +"' WHERE id=" + id + ";");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int deleteUser(int id){
+
+        try (Statement stmt = connection.createStatement()) {
+            return stmt.executeUpdate("DELETE FROM user WHERE id=" + id + ";");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     }
 

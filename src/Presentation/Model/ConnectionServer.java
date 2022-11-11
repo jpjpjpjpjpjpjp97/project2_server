@@ -20,7 +20,7 @@ public class ConnectionServer {
         String url = "jdbc:mysql://localhost:3306/project2";
 
         try {
-            connection = DriverManager.getConnection(url, "root", "");
+            connection = DriverManager.getConnection(url, "root", password);
             if(connection != null){
                 System.out.println("You have successfully connected to the database");
             }
@@ -33,32 +33,4 @@ public class ConnectionServer {
     }
 
 
-    public void registerUser(){
-
-        //sql statement for inserting record
-        String sql = "INSERT INTO usuario (idPersona, Nombre) VALUES (?, ?)";
-        //getting input from user
-        Scanner input=new Scanner(System.in);
-        System.out.println("Enter ID");
-        int id=Integer.parseInt(input.nextLine());
-        System.out.println("Enter First Name");
-        String lName=input.nextLine();
-
-
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            //setting parameter values
-            statement.setInt(1, id);
-            statement.setString(2, lName);
-            //executing query which will return an integer value
-            int rowsInserted = statement.executeUpdate();
-            //if rowInserted is greate r then 0 mean rows are inserted
-            if (rowsInserted > 0) {
-                logger.debug("A new user was inserted successfully!");
-            }
-        }catch (Exception e){
-            logger.error("Exception in connection: "+ e.toString());
-
-        }
-    }
 }

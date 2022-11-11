@@ -28,6 +28,12 @@ public class Logic {
     public boolean registerUser(String username , String password){
         return data.addUser(username , password);
     }
+    public int updateUser(int id ,String username , String password){
+        return data.updateUser(id,username , password);
+    }
 
+    public int deleteUser(int id){
+        return data.deleteUser(id);
+    }
 
 }
