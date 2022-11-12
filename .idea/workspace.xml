@@ -4,16 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="caa0a256-b5d5-4893-9969-ed2e7b27b7f8" name="Changes" comment="First Commit&#10;Sockets to communicate + multithreading for several clients.">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/log4j_1_2_17.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/mysql_connector_j_8_0_31.xml" afterDir="false" />
+    <list default="true" id="caa0a256-b5d5-4893-9969-ed2e7b27b7f8" name="Changes" comment="Fix/&#10;server connection fixes">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/json_simple_1_1_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Presentation/Model/Contact.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project2_server.iml" beforeDir="false" afterPath="$PROJECT_DIR$/project2_server.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Data/Data.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Data/Data.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Logic/Logic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Logic/Logic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Presentation/Controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Controller/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Presentation/Model/AbstractUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Model/AbstractUser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Presentation/Model/ClientThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Model/ClientThread.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Presentation/Model/ConnectionServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Model/ConnectionServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/MainView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Presentation/Model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Model/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +116,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668051104137</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Fix/&#10;server connection fixes">
+      <created>1668140247861</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1668140247861</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -130,7 +139,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First Commit&#10;Sockets to communicate + multithreading for several clients." />
-    <option name="LAST_COMMIT_MESSAGE" value="First Commit&#10;Sockets to communicate + multithreading for several clients." />
+    <MESSAGE value="Fix/&#10;server connection fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix/&#10;server connection fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -139,6 +149,11 @@
           <properties class="java.sql.SQLException" package="java.sql" />
           <option name="timeStamp" value="3" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Presentation/Model/ClientThread.java</url>
+          <line>75</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

@@ -15,7 +15,7 @@ public class ConnectionServer {
     private static final Logger logger = LogManager.getLogger(ConnectionServer.class);
     public Connection connectionDataBase(){
 
-        String password = "Leosanpo16";
+        String password = "";
         String usuario = "root";
         String url = "jdbc:mysql://localhost:3306/project2";
 

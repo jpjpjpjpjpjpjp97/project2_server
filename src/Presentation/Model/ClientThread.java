@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientThread extends Thread {
@@ -30,13 +31,10 @@ public class ClientThread extends Thread {
             outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
             boolean close = false;
             while(!close) {
-
                 String option = ((String) this.inputStream.readUTF());
-
                 switch (option) {
 
                     case "authenticate":
-
                         this.clientUsername = ((String) this.inputStream.readUTF());
                         String clientPassword = ((String) this.inputStream.readUTF());
                         System.out.format("Username: %s | Pwd: %s \n", clientUsername, clientPassword);
@@ -68,6 +66,17 @@ public class ClientThread extends Thread {
                         } while (((String) this.inputStream.readUTF()).equals("continue"));
                         break;
 
+                    case "listUsers":
+                        ArrayList<User> userList = (ArrayList<User>) this.listUsers();
+                        outputStream.writeObject(userList);
+                        break;
+
+                    case "filterUsers":
+                        String filterText = ((String) this.inputStream.readUTF());
+                        ArrayList<User> filteredUserList = (ArrayList<User>) this.filterUsers(filterText);
+                        outputStream.writeObject(filteredUserList);
+                        break;
+
                     case "registerUser":
                         String newUserName = ((String) this.inputStream.readUTF());
                         String newPassword = ((String) this.inputStream.readUTF());
@@ -89,10 +98,10 @@ public class ClientThread extends Thread {
                         String upId = ((String) this.inputStream.readUTF());
                         String upUserName = ((String) this.inputStream.readUTF());
                         String upPassword = ((String) this.inputStream.readUTF());
-                        System.out.format("update username: %s | update Pwd: %s \n", upUserName, upPassword);
+                        System.out.format("Update username: %s | update Pwd: %s \n", upUserName, upPassword);
 
                         synchronized (this) {
-                            if (this.updateUser(Integer.parseInt(upId) , upUserName , upPassword) != 0) {
+                            if (this.updateUser(Integer.parseInt(upId) , upUserName , upPassword)) {
                                 outputStream.writeUTF("Successfully Updated");
                                 outputStream.flush();
                             } else {
@@ -105,10 +114,10 @@ public class ClientThread extends Thread {
 
                     case "deleteUser":
                         String deleteId = ((String) this.inputStream.readUTF());
-                        System.out.format("delete id: %s \n", deleteId);
+                        System.out.format("Delete id: %s \n", deleteId);
 
                         synchronized (this) {
-                            if (this.deleteUser(Integer.parseInt(deleteId)) != 0) {
+                            if (this.deleteUser(Integer.parseInt(deleteId))) {
                                 outputStream.writeUTF("Successfully Deleted");
                                 outputStream.flush();
                             } else {
@@ -119,17 +128,21 @@ public class ClientThread extends Thread {
                         }
                         break;
 
+                    case "pendingMessages":
+                        int userId = this.inputStream.readInt();
+                        System.out.format("Messages recipient: %s \n", userId);
+                        ArrayList<Message> pendingMessages = (ArrayList<Message>) this.getPendingMessages(userId);
+                        outputStream.writeObject(pendingMessages);
+                        break;
+
                     case "close":
                         close = true;
                         break;
-
                 }
             }
-
             System.out.println("Closing connection with " + this.clientUsername);
             this.inputStream.close();
             this.outputStream.close();
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
@@ -141,18 +154,27 @@ public class ClientThread extends Thread {
         return mainController.authenticate(clientUsername, clientPassword);
     }
 
+    private List<User> listUsers() {
+        return mainController.listUsers();
+    }
+
+    private List<User> filterUsers(String text) {
+        return mainController.filterUsers(text);
+    }
+
     private boolean registerUser(String username, String password) {
         return mainController.registerUser(username, password);
     }
 
-    private int updateUser(int id,String username, String password) {
+    private boolean updateUser(int id, String username, String password) {
         return mainController.updateUser(id,username, password);
     }
 
-    private int deleteUser(int id) {
+    private boolean deleteUser(int id) {
         return mainController.deleteUser(id);
     }
 
-
-
+    private Object getPendingMessages(int id) {
+        return null;
+    }
 }

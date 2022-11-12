@@ -5,9 +5,11 @@ import Presentation.Controller.MainController;
 import Presentation.Model.ClientThread;
 import Presentation.Model.ConnectionServer;
 import Presentation.Model.Server;
+import Presentation.Model.User;
 
 import java.net.Socket;
 import java.sql.Connection;
+import java.util.List;
 
 public class Logic {
 
@@ -28,11 +30,20 @@ public class Logic {
     public boolean registerUser(String username , String password){
         return data.addUser(username , password);
     }
-    public int updateUser(int id ,String username , String password){
+
+    public List<User> filterUsers(String text) {
+        return data.filterUsers(text);
+    }
+
+    public List<User> listUsers() {
+        return data.listUsers();
+    }
+
+    public boolean updateUser(int id ,String username , String password){
         return data.updateUser(id,username , password);
     }
 
-    public int deleteUser(int id){
+    public boolean deleteUser(int id){
         return data.deleteUser(id);
     }
 

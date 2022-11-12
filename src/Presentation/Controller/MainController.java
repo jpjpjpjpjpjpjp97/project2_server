@@ -28,15 +28,24 @@ public class MainController {
         return true;
     }
 
+
+    public List<User> filterUsers(String text) {
+        return logic.filterUsers(text);
+    }
+
+    public List<User> listUsers() {
+        return logic.listUsers();
+    }
+
     public boolean registerUser(String username, String password) {
       return logic.registerUser(username , password);
     }
 
-    public int updateUser(int id ,String username, String password) {
+    public boolean updateUser(int id ,String username, String password) {
         return logic.updateUser(id,username , password);
     }
 
-    public int deleteUser(int id) {
+    public boolean deleteUser(int id) {
         return logic.deleteUser(id);
     }
 }
