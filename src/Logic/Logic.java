@@ -1,8 +1,10 @@
 package Logic;
 
+import Data.MessageData;
 import Data.UserData;
 import Presentation.Controller.MainController;
 import Data.ConnectionServer;
+import Presentation.Controller.MessageController;
 import Presentation.Controller.UserController;
 import Presentation.Model.Server;
 
@@ -13,9 +15,16 @@ public class Logic {
 
     private UserData userData;
     private UserLogic userLogic;
+
+    private MessageData messageData;
+
+    private MessageLogic messageLogic;
     private Connection connection;
     private MainController mainController;
     private UserController userController;
+
+    private MessageController messageController;
+
 
     public Logic() {
     }
@@ -24,9 +33,17 @@ public class Logic {
         this.connection = new ConnectionServer().connectionDataBase();
         this.userData = new UserData(connection);
         this.userLogic = new UserLogic(userData);
+
+        this.messageData = new MessageData(connection);
+        this.messageLogic = new MessageLogic(messageData);
+
         this.userController = new UserController(this.userLogic);
+        this.messageController = new MessageController(this.messageLogic);
+
         this.mainController = new MainController(this, userController);
-        Server server = new Server(mainController, userController);
+        this.mainController = new MainController(this, messageController);
+
+        Server server = new Server(mainController, userController , messageController);
         server.start();
     }
 

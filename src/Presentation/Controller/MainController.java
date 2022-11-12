@@ -9,13 +9,24 @@ public class MainController {
 
     private Logic logic;
     private UserController userController;
+
+    private MessageController messageController;
     public List<User> getClientList() {
         return null;
     }
 
-    public MainController(Logic logic, UserController userController){
+    public MainController(Logic logic, UserController userController ){
         this.logic = logic;
+        this.userController = userController;
+    }
 
+    public MainController(Logic logic, MessageController messageController ){
+        this.logic = logic;
+        this.messageController = messageController;
+    }
+
+    public MainController(Logic logic){
+        this.logic = logic;
     }
 
     public void openChatWindow() {

@@ -1,6 +1,7 @@
 package Presentation.Model;
 
 import Presentation.Controller.MainController;
+import Presentation.Controller.MessageController;
 import Presentation.Controller.UserController;
 
 import java.io.IOException;
@@ -19,11 +20,13 @@ public class ClientThread extends Thread {
     private boolean isAuthenticated;
     private MainController mainController;
     private UserController userController;
+    private MessageController messageController;
 
-    public ClientThread(Socket clientSocket, MainController mainController, UserController userController) {
+    public ClientThread(Socket clientSocket, MainController mainController, UserController userController , MessageController messageController) {
         this.clientSocket = clientSocket;
         this.mainController = mainController;
         this.userController = userController;
+        this.messageController = messageController;
         this.clientList = mainController.getClientList();
     }
 
@@ -130,12 +133,78 @@ public class ClientThread extends Thread {
                         }
                         break;
 
+
+
                     case "pendingMessages":
                         int userId = this.inputStream.readInt();
                         System.out.format("Messages recipient: %s \n", userId);
                         ArrayList<Message> pendingMessages = (ArrayList<Message>) this.getPendingMessages(userId);
                         outputStream.writeObject(pendingMessages);
                         break;
+
+
+                    case "listMessages":
+                        ArrayList<Message> messageList = (ArrayList<Message>) this.listMessages();
+                        outputStream.writeObject(messageList);
+                        break;
+
+                    case "filterMessages":
+                        String filterMessage = ((String) this.inputStream.readUTF());
+                        ArrayList<Message> filteredMessageList = (ArrayList<Message>) this.filterMessages(filterMessage);
+                        outputStream.writeObject(filteredMessageList );
+                        break;
+
+                    case "addMessage":
+                        String newText = ((String) this.inputStream.readUTF());
+                        String newId_conversation = ((String) this.inputStream.readUTF());
+                        System.out.format("Text: %s | id_conversation: %s \n", newText, newId_conversation);
+
+                        synchronized (this) {
+                            if (this.addMessage(newText , Integer.parseInt(newId_conversation))) {
+                                outputStream.writeUTF("Successfully added");
+                                outputStream.flush();
+                            } else {
+                                outputStream.writeUTF("Not added");
+                                outputStream.flush();
+                            }
+
+                        }
+                        break;
+
+                    case "updateMessage":
+                        String upIdMessage = ((String) this.inputStream.readUTF());
+                        String upText = ((String) this.inputStream.readUTF());
+                        String id_conversation = ((String) this.inputStream.readUTF());
+                        System.out.format("Update Text: %s | update Id_conversation: %s \n", upText, id_conversation);
+
+                        synchronized (this) {
+                            if (this.updateMessage(Integer.parseInt(upIdMessage) , upText , Integer.parseInt(id_conversation))) {
+                                outputStream.writeUTF("Successfully Updated");
+                                outputStream.flush();
+                            } else {
+                                outputStream.writeUTF("Not Updated");
+                                outputStream.flush();
+                            }
+
+                        }
+                        break;
+
+                    case "deleteMessage":
+                        String deleteId_Message = ((String) this.inputStream.readUTF());
+                        System.out.format("Delete id: %s \n", deleteId_Message);
+
+                        synchronized (this) {
+                            if (this.deleteMessage(Integer.parseInt(deleteId_Message ))) {
+                                outputStream.writeUTF("Successfully Deleted");
+                                outputStream.flush();
+                            } else {
+                                outputStream.writeUTF("Not Deleted");
+                                outputStream.flush();
+                            }
+
+                        }
+                        break;
+
 
                     case "close":
                         close = true;
@@ -160,9 +229,32 @@ public class ClientThread extends Thread {
         return userController.listUsers();
     }
 
+    private List<Message> listMessages() {
+        return messageController.listMessages();
+    }
+
+    private List<Message> filterMessages(String text) {
+        return messageController.filterMessages(text);
+    }
+
+    private boolean addMessage(String text, int id_conversation) {
+        return messageController.addMessage(text, id_conversation);
+    }
+
+    private boolean updateMessage(int id, String text, int  id_conversation) {
+        return messageController.updateMessage(id,text, id_conversation);
+    }
+
+    private boolean deleteMessage(int id) {
+        return messageController.deleteMessage(id);
+    }
+
+
+
     private List<User> filterUsers(String text) {
         return userController.filterUsers(text);
     }
+
 
     private boolean registerUser(String username, String password) {
         return userController.registerUser(username, password);
