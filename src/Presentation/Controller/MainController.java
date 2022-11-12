@@ -8,12 +8,14 @@ import java.util.List;
 public class MainController {
 
     private Logic logic;
+    private UserController userController;
     public List<User> getClientList() {
         return null;
     }
 
-    public MainController(Logic logic){
+    public MainController(Logic logic, UserController userController){
         this.logic = logic;
+
     }
 
     public void openChatWindow() {
@@ -24,28 +26,11 @@ public class MainController {
 
     }
 
-    public boolean authenticate(String clientUsername, String clientPassword) {
-        return true;
+    public UserController getUserController() {
+        return this.userController;
     }
 
-
-    public List<User> filterUsers(String text) {
-        return logic.filterUsers(text);
-    }
-
-    public List<User> listUsers() {
-        return logic.listUsers();
-    }
-
-    public boolean registerUser(String username, String password) {
-      return logic.registerUser(username , password);
-    }
-
-    public boolean updateUser(int id ,String username, String password) {
-        return logic.updateUser(id,username , password);
-    }
-
-    public boolean deleteUser(int id) {
-        return logic.deleteUser(id);
+    public void setUserController(UserController userController) {
+        this.userController = userController;
     }
 }

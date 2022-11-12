@@ -1,7 +1,7 @@
 package Presentation.Model;
 
 import Presentation.Controller.MainController;
-import Presentation.Model.Message;
+import Presentation.Controller.UserController;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,10 +18,12 @@ public class ClientThread extends Thread {
     private Socket clientSocket = null;
     private boolean isAuthenticated;
     private MainController mainController;
+    private UserController userController;
 
-    public ClientThread(Socket clientSocket, MainController mainController) {
+    public ClientThread(Socket clientSocket, MainController mainController, UserController userController) {
         this.clientSocket = clientSocket;
         this.mainController = mainController;
+        this.userController = userController;
         this.clientList = mainController.getClientList();
     }
 
@@ -151,30 +153,30 @@ public class ClientThread extends Thread {
     }
 
     private boolean authenticate(String clientName, String clientPassword) {
-        return mainController.authenticate(clientUsername, clientPassword);
+        return userController.authenticate(clientUsername, clientPassword);
     }
 
     private List<User> listUsers() {
-        return mainController.listUsers();
+        return userController.listUsers();
     }
 
     private List<User> filterUsers(String text) {
-        return mainController.filterUsers(text);
+        return userController.filterUsers(text);
     }
 
     private boolean registerUser(String username, String password) {
-        return mainController.registerUser(username, password);
+        return userController.registerUser(username, password);
     }
 
     private boolean updateUser(int id, String username, String password) {
-        return mainController.updateUser(id,username, password);
+        return userController.updateUser(id,username, password);
     }
 
     private boolean deleteUser(int id) {
-        return mainController.deleteUser(id);
+        return userController.deleteUser(id);
     }
 
     private Object getPendingMessages(int id) {
-        return null;
+        return userController.deleteUser(id);
     }
 }

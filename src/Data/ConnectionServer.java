@@ -1,10 +1,8 @@
-package Presentation.Model;
+package Data;
 
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Connection;
-import java.util.Scanner;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;

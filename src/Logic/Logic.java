@@ -1,50 +1,48 @@
 package Logic;
 
-import Data.Data;
+import Data.UserData;
 import Presentation.Controller.MainController;
-import Presentation.Model.ClientThread;
-import Presentation.Model.ConnectionServer;
+import Data.ConnectionServer;
+import Presentation.Controller.UserController;
 import Presentation.Model.Server;
-import Presentation.Model.User;
 
-import java.net.Socket;
 import java.sql.Connection;
 import java.util.List;
 
 public class Logic {
 
-    private Data data;
+    private UserData userData;
+    private UserLogic userLogic;
     private Connection connection;
+    private MainController mainController;
+    private UserController userController;
 
     public Logic() {
     }
 
     public void start(){
-        MainController mainController = new MainController(this);
-        Server server = new Server(mainController);
-        connection = new ConnectionServer().connectionDataBase();
-        this.data = new Data(mainController, connection);
+        this.connection = new ConnectionServer().connectionDataBase();
+        this.userData = new UserData(connection);
+        this.userLogic = new UserLogic(userData);
+        this.userController = new UserController(this.userLogic);
+        this.mainController = new MainController(this, userController);
+        Server server = new Server(mainController, userController);
         server.start();
     }
 
-    public boolean registerUser(String username , String password){
-        return data.addUser(username , password);
+    public UserData getUserData() {
+        return userData;
     }
 
-    public List<User> filterUsers(String text) {
-        return data.filterUsers(text);
+    public void setUserData(UserData userData) {
+        this.userData = userData;
     }
 
-    public List<User> listUsers() {
-        return data.listUsers();
+    public UserLogic getUserLogic() {
+        return userLogic;
     }
 
-    public boolean updateUser(int id ,String username , String password){
-        return data.updateUser(id,username , password);
+    public void setUserLogic(UserLogic userLogic) {
+        this.userLogic = userLogic;
     }
-
-    public boolean deleteUser(int id){
-        return data.deleteUser(id);
-    }
-
 }

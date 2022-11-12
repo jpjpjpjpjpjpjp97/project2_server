@@ -1,6 +1,7 @@
 package Presentation.Model;
 
 import Presentation.Controller.MainController;
+import Presentation.Controller.UserController;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -10,13 +11,15 @@ import java.net.ServerSocket;
 public class Server {
     private static ServerSocket serverSocket;
     private static Socket clientSocket;
+    private static UserController userController;
     private int portNumber;
     private static ArrayList<ClientThread> clientList;
     private int numberOfClients;
     private MainController mainController;
 
-    public Server(MainController mainController) {
+    public Server(MainController mainController, UserController userController) {
         this.mainController = mainController;
+        this.userController = userController;
         this.portNumber = 8080;
         this.numberOfClients = 0;
         this.clientList = new ArrayList<>();
@@ -31,7 +34,7 @@ public class Server {
         while (true) {
             try {
                 clientSocket = serverSocket.accept();
-                ClientThread newClient =  new ClientThread(clientSocket, mainController);
+                ClientThread newClient =  new ClientThread(clientSocket, mainController, userController);
                 newClient.start();
                 clientList.add(newClient);
                 System.out.println("Client connected!");
