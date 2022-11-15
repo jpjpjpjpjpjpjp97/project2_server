@@ -39,15 +39,36 @@ public class Server {
         while (true) {
             try {
                 clientSocket = serverSocket.accept();
-                ClientThread newClient =  new ClientThread(clientSocket, mainController, userController , messageController);
+                ClientThread newClient =  new ClientThread(clientSocket, this, mainController, userController , messageController);
                 newClient.start();
                 clientList.add(newClient);
                 System.out.println("Client connected!");
                 this.numberOfClients++;
+                System.out.println(numberOfClients + " clients connected at the moment!");
 
             } catch (IOException e) {
                 System.out.println("Client could not be connected");
             }
         }
+    }
+
+    public void sendMessage(Message message, int receiverId){
+        if (this.isOnline(receiverId)){
+
+        }
+    }
+
+    public boolean isOnline(int receiverId){
+        for (ClientThread client : this.clientList) {
+            if (client.getClientId() == receiverId && client.isOnline()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void closeClient(ClientThread closingClient){
+        this.clientList.remove(closingClient);
+        this.numberOfClients --;
     }
 }

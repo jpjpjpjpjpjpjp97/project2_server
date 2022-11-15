@@ -27,6 +27,18 @@ public class UserData {
         this.connection = connection;
     }
 
+    public int authenticate(String clientUsername, String clientPassword) {
+        try {
+            ResultSet userResultSet = connection.createStatement().executeQuery("SELECT id, username, online FROM user WHERE username='"+ clientUsername +"' AND password='" + clientPassword + "';");
+            if (userResultSet.next()) {
+                return userResultSet.getInt("id");
+            }
+        }catch (Exception e){
+            logger.error("Exception in connection: "+ e.toString());
+        }
+        return 0;
+    }
+
     public List<Presentation.Model.User> listUsers() {
         String sql = "SELECT id, username, online FROM user;";
         ArrayList<Presentation.Model.User> userList = new ArrayList<>();
@@ -61,23 +73,24 @@ public class UserData {
         return filteredUserList;
     }
 
-    public boolean addUser(String name , String password){
-            //sql statement for inserting record
+    public int addUser(String name , String password){
             String sql = "INSERT INTO user (username, password , online) VALUES (?, ? , ?);";
-            //getting input from user
             try {
                 PreparedStatement statement = connection.prepareStatement(sql);
                 //setting parameter values
                 statement.setString(1,name);
                 statement.setString(2, password);
                 statement.setBoolean(3, false);
-                //executing query which will return an integer value
-                int rowsInserted = statement.executeUpdate();
-                return (rowsInserted!=0);
+                if (statement.executeUpdate() != 0){
+                    ResultSet userResultSet = connection.createStatement().executeQuery("SELECT id, username, online FROM user WHERE username='" + name + "';");
+                    if (userResultSet.next()) {
+                        return userResultSet.getInt("id");
+                    }
+                }
             }catch (Exception e){
                 logger.error("Exception in connection: "+ e.toString());
             }
-            return false;
+            return 0;
         }
 
     public boolean updateUser(int id ,String name , String password){
@@ -97,6 +110,7 @@ public class UserData {
         }
         return false;
     }
+
 }
 
 

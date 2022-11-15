@@ -11,8 +11,8 @@ public class UserController {
         this.userLogic = userLogic;
     }
 
-    public boolean authenticate(String clientUsername, String clientPassword) {
-        return true;
+    public int authenticate(String clientUsername, String clientPassword) {
+        return userLogic.authenticate(clientUsername, clientPassword);
     }
 
 
@@ -24,7 +24,7 @@ public class UserController {
         return userLogic.listUsers();
     }
 
-    public boolean registerUser(String username, String password) {
+    public int registerUser(String username, String password) {
         return userLogic.registerUser(username , password);
     }
 

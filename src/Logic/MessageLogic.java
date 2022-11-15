@@ -14,8 +14,8 @@ public class MessageLogic {
         this.messageData = messageData;
     }
 
-    public boolean addMessage(String text , int conversation_id){
-        return messageData.addMessage(text , conversation_id);
+    public boolean addMessage(Message message){
+        return messageData.addMessage(message);
     }
 
     public List<Message> filterMessages(String text) {
@@ -26,6 +26,14 @@ public class MessageLogic {
         return messageData.listMessages();
     }
 
+    public List<Message> getNewMessages(int receiverId) {
+        return messageData.getNewMessages(receiverId);
+    }
+
+    public List<Message> getPendingMessages(int id) {
+        return messageData.getPendingMessages(id);
+    }
+
     public boolean updateMessage(int id ,String text , int conversation_id){
         return messageData.updateMessage(id,text,conversation_id);
     }
@@ -33,4 +41,5 @@ public class MessageLogic {
     public boolean deleteMessage(int id){
         return messageData.deleteMessage(id);
     }
+
 }

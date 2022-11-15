@@ -12,7 +12,11 @@ public class UserLogic {
         this.userData = userData;
     }
 
-    public boolean registerUser(String username , String password){
+    public int authenticate(String clientUsername, String clientPassword) {
+        return userData.authenticate(clientUsername, clientPassword);
+    }
+
+    public int registerUser(String username , String password){
         return userData.addUser(username , password);
     }
 
@@ -31,4 +35,5 @@ public class UserLogic {
     public boolean deleteUser(int id){
         return userData.deleteUser(id);
     }
+
 }

@@ -12,18 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientThread extends Thread {
-    private String clientUsername = null;
+    private int clientId = 0;
+    private String clientUsername = "";
     private List<User> clientList;
-    private ObjectInputStream inputStream = null;
-    private ObjectOutputStream outputStream = null;
+    private ObjectInputStream inputStream;
+    private ObjectOutputStream outputStream;
     private Socket clientSocket = null;
+    private Server server;
     private boolean isAuthenticated;
     private MainController mainController;
     private UserController userController;
     private MessageController messageController;
 
-    public ClientThread(Socket clientSocket, MainController mainController, UserController userController , MessageController messageController) {
+    public ClientThread(Socket clientSocket, Server server, MainController mainController, UserController userController , MessageController messageController) {
         this.clientSocket = clientSocket;
+        this.server = server;
         this.mainController = mainController;
         this.userController = userController;
         this.messageController = messageController;
@@ -37,6 +40,7 @@ public class ClientThread extends Thread {
             boolean close = false;
             while(!close) {
                 String option = ((String) this.inputStream.readUTF());
+                System.out.println("Option: " + option);
                 switch (option) {
 
                     case "authenticate":
@@ -44,31 +48,19 @@ public class ClientThread extends Thread {
                         String clientPassword = ((String) this.inputStream.readUTF());
                         System.out.format("Username: %s | Pwd: %s \n", clientUsername, clientPassword);
                         synchronized (this) {
-                            if (this.authenticate(clientUsername, clientPassword)) {
-                                this.isAuthenticated = true;
-                                outputStream.writeUTF("Successfully Authenticated");
-                                outputStream.flush();
-                            } else {
-                                outputStream.writeUTF("Not Authenticated");
-                                outputStream.flush();
-                                System.out.println("Username or password are not correct.");
-                            }
-
-                            if (this.isAuthenticated) {
-                                mainController.openChatWindow();
-                            } else {
-                                mainController.setError("Username or password are not correct. Unable to authenticate.");
-                            }
+                            outputStream.writeInt(this.authenticate(clientUsername, clientPassword));
+                            outputStream.flush();
                         }
 
-                        do {
-                            if (this.isAuthenticated) {
-                                Message receivedMessage = (Message) this.inputStream.readObject();
-                                System.out.format("Message: %s | From: %s | To: %s\n", receivedMessage.getText(), receivedMessage.getSenderId(), receivedMessage.getReceiverId());
-                            } else {
-                                break;
-                            }
-                        } while (((String) this.inputStream.readUTF()).equals("continue"));
+//                        do {
+//                            System.out.println("Waiting for new messages");
+//                            if (this.isAuthenticated) {
+//                                Message receivedMessage = (Message) this.inputStream.readObject();
+//                                System.out.format("Message: %s | From: %s | To: %s\n", receivedMessage.getText(), receivedMessage.getSenderId(), receivedMessage.getReceiverId());
+//                            } else {
+//                                break;
+//                            }
+//                        } while (((String) this.inputStream.readUTF()).equals("continue"));
                         break;
 
                     case "listUsers":
@@ -88,14 +80,8 @@ public class ClientThread extends Thread {
                         System.out.format("Username: %s | Pwd: %s \n", newUserName, newPassword);
 
                         synchronized (this) {
-                            if (this.registerUser(newUserName , newPassword)) {
-                                outputStream.writeUTF("Successfully Registered");
-                                outputStream.flush();
-                            } else {
-                                outputStream.writeUTF("Not Registered");
-                                outputStream.flush();
-                            }
-
+                            outputStream.writeInt(this.registerUser(newUserName , newPassword));
+                            outputStream.flush();
                         }
                         break;
 
@@ -113,7 +99,6 @@ public class ClientThread extends Thread {
                                 outputStream.writeUTF("Not Updated");
                                 outputStream.flush();
                             }
-
                         }
                         break;
 
@@ -129,11 +114,8 @@ public class ClientThread extends Thread {
                                 outputStream.writeUTF("Not Deleted");
                                 outputStream.flush();
                             }
-
                         }
                         break;
-
-
 
                     case "pendingMessages":
                         int userId = this.inputStream.readInt();
@@ -141,7 +123,6 @@ public class ClientThread extends Thread {
                         ArrayList<Message> pendingMessages = (ArrayList<Message>) this.getPendingMessages(userId);
                         outputStream.writeObject(pendingMessages);
                         break;
-
 
                     case "listMessages":
                         ArrayList<Message> messageList = (ArrayList<Message>) this.listMessages();
@@ -154,20 +135,24 @@ public class ClientThread extends Thread {
                         outputStream.writeObject(filteredMessageList );
                         break;
 
+                    case "getNewMessages":
+                        int receiverId = this.inputStream.readInt();
+                        ArrayList<Message> newMessageList = (ArrayList<Message>) this.getNewMessages(receiverId);
+                        outputStream.writeObject(newMessageList);
+                        break;
+
                     case "addMessage":
-                        String newText = ((String) this.inputStream.readUTF());
-                        String newId_conversation = ((String) this.inputStream.readUTF());
-                        System.out.format("Text: %s | id_conversation: %s \n", newText, newId_conversation);
+                        Message newMessage = ((Message) this.inputStream.readObject());
+                        System.out.format("Message: %s \n", newMessage.toString());
 
                         synchronized (this) {
-                            if (this.addMessage(newText , Integer.parseInt(newId_conversation))) {
+                            if (this.addMessage(newMessage)) {
                                 outputStream.writeUTF("Successfully added");
                                 outputStream.flush();
                             } else {
                                 outputStream.writeUTF("Not added");
                                 outputStream.flush();
                             }
-
                         }
                         break;
 
@@ -185,7 +170,6 @@ public class ClientThread extends Thread {
                                 outputStream.writeUTF("Not Updated");
                                 outputStream.flush();
                             }
-
                         }
                         break;
 
@@ -201,19 +185,19 @@ public class ClientThread extends Thread {
                                 outputStream.writeUTF("Not Deleted");
                                 outputStream.flush();
                             }
-
                         }
                         break;
-
 
                     case "close":
                         close = true;
                         break;
                 }
+                if (!close) System.out.println("Waiting for next input from client...");
             }
             System.out.println("Closing connection with " + this.clientUsername);
             this.inputStream.close();
             this.outputStream.close();
+            this.server.closeClient(this);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
@@ -221,7 +205,8 @@ public class ClientThread extends Thread {
         }
     }
 
-    private boolean authenticate(String clientName, String clientPassword) {
+
+    private int authenticate(String clientName, String clientPassword) {
         return userController.authenticate(clientUsername, clientPassword);
     }
 
@@ -237,8 +222,12 @@ public class ClientThread extends Thread {
         return messageController.filterMessages(text);
     }
 
-    private boolean addMessage(String text, int id_conversation) {
-        return messageController.addMessage(text, id_conversation);
+    private List<Message> getNewMessages(int receiverId) {
+        return messageController.getNewMessages(receiverId);
+    }
+
+    private boolean addMessage(Message message) {
+        return messageController.addMessage(message);
     }
 
     private boolean updateMessage(int id, String text, int  id_conversation) {
@@ -256,7 +245,7 @@ public class ClientThread extends Thread {
     }
 
 
-    private boolean registerUser(String username, String password) {
+    private int registerUser(String username, String password) {
         return userController.registerUser(username, password);
     }
 
@@ -268,7 +257,99 @@ public class ClientThread extends Thread {
         return userController.deleteUser(id);
     }
 
-    private Object getPendingMessages(int id) {
-        return userController.deleteUser(id);
+    private List<Message> getPendingMessages(int id) {
+        return messageController.getPendingMessages(id);
+    }
+
+    public int getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getClientUsername() {
+        return clientUsername;
+    }
+
+    public void setClientUsername(String clientUsername) {
+        this.clientUsername = clientUsername;
+    }
+
+    public List<User> getClientList() {
+        return clientList;
+    }
+
+    public void setClientList(List<User> clientList) {
+        this.clientList = clientList;
+    }
+
+    public ObjectInputStream getInputStream() {
+        return inputStream;
+    }
+
+    public void setInputStream(ObjectInputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
+    public ObjectOutputStream getOutputStream() {
+        return outputStream;
+    }
+
+    public void setOutputStream(ObjectOutputStream outputStream) {
+        this.outputStream = outputStream;
+    }
+
+    public Socket getClientSocket() {
+        return clientSocket;
+    }
+
+    public void setClientSocket(Socket clientSocket) {
+        this.clientSocket = clientSocket;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
+
+    public boolean isAuthenticated() {
+        return isAuthenticated;
+    }
+
+    public void setAuthenticated(boolean authenticated) {
+        isAuthenticated = authenticated;
+    }
+
+    public MainController getMainController() {
+        return mainController;
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+    public UserController getUserController() {
+        return userController;
+    }
+
+    public void setUserController(UserController userController) {
+        this.userController = userController;
+    }
+
+    public MessageController getMessageController() {
+        return messageController;
+    }
+
+    public void setMessageController(MessageController messageController) {
+        this.messageController = messageController;
+    }
+
+    public boolean isOnline() {
+        return true;
     }
 }

@@ -23,8 +23,16 @@ public class MessageController {
         return messageLogic.listMessages();
     }
 
-    public boolean addMessage(String text, int conversation_id) {
-        return messageLogic.addMessage(text , conversation_id);
+    public List<Message> getNewMessages(int receiverId) {
+        return messageLogic.getNewMessages(receiverId);
+    }
+
+    public List<Message> getPendingMessages(int id) {
+        return messageLogic.getPendingMessages(id);
+    }
+
+    public boolean addMessage(Message message) {
+        return messageLogic.addMessage(message);
     }
 
     public boolean updateMessage(int id ,String text, int conversation_id) {
@@ -34,4 +42,5 @@ public class MessageController {
     public boolean deleteMessage(int id) {
         return messageLogic.deleteMessage(id);
     }
+
 }
