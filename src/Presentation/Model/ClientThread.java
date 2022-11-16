@@ -102,7 +102,7 @@ public class ClientThread extends Thread {
                         }
                         break;
 
-                    case "deleteUser":
+                    /*case "deleteUser":
                         String deleteId = ((String) this.inputStream.readUTF());
                         System.out.format("Delete id: %s \n", deleteId);
 
@@ -115,7 +115,7 @@ public class ClientThread extends Thread {
                                 outputStream.flush();
                             }
                         }
-                        break;
+                        break;*/
 
                     case "pendingMessages":
                         int userId = this.inputStream.readInt();
@@ -155,6 +155,13 @@ public class ClientThread extends Thread {
                             }
                         }
                         break;
+
+                    case "PendingMessages":
+                        int idReceived = this.inputStream.readInt();
+                        ArrayList<Message> newMessageList2 = (ArrayList<Message>) this.getPendingMessages(idReceived);
+                        outputStream.writeObject(newMessageList2);
+                        break;
+
 
                     case "updateMessage":
                         String upIdMessage = ((String) this.inputStream.readUTF());

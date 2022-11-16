@@ -65,13 +65,20 @@ public class MessageData {
         try {
             ResultSet messageResultSet = connection.createStatement().executeQuery("SELECT id, sender_id, receiver_id FROM conversation WHERE sender_id=" + message.getSenderId() + " AND receiver_id=" + message.getReceiverId() + ";");
             if (!messageResultSet.next()) {
-                PreparedStatement statement = connection.prepareStatement("INSERT INTO conversation (sender_id, receiver_id) VALUES (? ?)");
+
+                PreparedStatement statement = connection.prepareStatement("INSERT INTO conversation (sender_id, receiver_id) VALUES (?,?);");
                 statement.setInt(1, message.getSenderId());
                 statement.setInt(2, message.getReceiverId());
                 statement.executeUpdate();
+
                 messageResultSet = connection.createStatement().executeQuery("SELECT id, sender_id, receiver_id FROM conversation WHERE sender_id=" + message.getSenderId() + " AND receiver_id=" + message.getReceiverId() + ";");
+                messageResultSet.next();
             }
+
             int conversationId = messageResultSet.getInt("id");
+
+
+
             String sql = "INSERT INTO message (text, conversation_id) VALUES (?, ?);";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, message.getText());
