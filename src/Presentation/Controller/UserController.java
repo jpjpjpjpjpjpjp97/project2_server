@@ -20,6 +20,9 @@ public class UserController {
         return userLogic.filterUsers(text);
     }
 
+    public int getUserId(String contactUsername) {
+        return userLogic.getUserId(contactUsername);
+    }
     public List<User> listUsers() {
         return userLogic.listUsers();
     }
@@ -35,4 +38,5 @@ public class UserController {
     public boolean deleteUser(int id) {
         return userLogic.deleteUser(id);
     }
+
 }

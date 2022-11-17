@@ -24,6 +24,9 @@ public class UserLogic {
         return userData.filterUsers(text);
     }
 
+    public int getUserId(String contactUsername) {
+        return userData.getUserId(contactUsername);
+    }
     public List<Presentation.Model.User> listUsers() {
         return userData.listUsers();
     }

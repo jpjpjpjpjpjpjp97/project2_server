@@ -72,6 +72,17 @@ public class UserData {
         }
         return filteredUserList;
     }
+    public int getUserId(String contactUsername) {
+        try {
+            ResultSet userResultSet = connection.createStatement().executeQuery("SELECT id FROM user WHERE username='"+ contactUsername +"';");
+            if (userResultSet.next()) {
+                return userResultSet.getInt("id");
+            }
+        }catch (Exception e){
+            logger.error("Exception in connection: "+ e.toString());
+        }
+        return 0;
+    }
 
     public int addUser(String name , String password){
             String sql = "INSERT INTO user (username, password , online) VALUES (?, ? , ?);";

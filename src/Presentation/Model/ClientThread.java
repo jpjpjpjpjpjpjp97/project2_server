@@ -51,16 +51,6 @@ public class ClientThread extends Thread {
                             outputStream.writeInt(this.authenticate(clientUsername, clientPassword));
                             outputStream.flush();
                         }
-
-//                        do {
-//                            System.out.println("Waiting for new messages");
-//                            if (this.isAuthenticated) {
-//                                Message receivedMessage = (Message) this.inputStream.readObject();
-//                                System.out.format("Message: %s | From: %s | To: %s\n", receivedMessage.getText(), receivedMessage.getSenderId(), receivedMessage.getReceiverId());
-//                            } else {
-//                                break;
-//                            }
-//                        } while (((String) this.inputStream.readUTF()).equals("continue"));
                         break;
 
                     case "listUsers":
@@ -72,6 +62,13 @@ public class ClientThread extends Thread {
                         String filterText = ((String) this.inputStream.readUTF());
                         ArrayList<User> filteredUserList = (ArrayList<User>) this.filterUsers(filterText);
                         outputStream.writeObject(filteredUserList);
+                        break;
+
+                    case "getIdForUsername":
+                        String contactUsername = ((String) this.inputStream.readUTF());
+                        int contactUserId = this.getUserId(contactUsername);
+                        outputStream.writeInt(contactUserId);
+                        outputStream.flush();
                         break;
 
                     case "registerUser":
@@ -101,21 +98,6 @@ public class ClientThread extends Thread {
                             }
                         }
                         break;
-
-                    /*case "deleteUser":
-                        String deleteId = ((String) this.inputStream.readUTF());
-                        System.out.format("Delete id: %s \n", deleteId);
-
-                        synchronized (this) {
-                            if (this.deleteUser(Integer.parseInt(deleteId))) {
-                                outputStream.writeUTF("Successfully Deleted");
-                                outputStream.flush();
-                            } else {
-                                outputStream.writeUTF("Not Deleted");
-                                outputStream.flush();
-                            }
-                        }
-                        break;*/
 
                     case "pendingMessages":
                         int userId = this.inputStream.readInt();
@@ -250,6 +232,11 @@ public class ClientThread extends Thread {
     private List<User> filterUsers(String text) {
         return userController.filterUsers(text);
     }
+
+    private int getUserId(String contactUsername) {
+        return userController.getUserId(contactUsername);
+    }
+
 
 
     private int registerUser(String username, String password) {
