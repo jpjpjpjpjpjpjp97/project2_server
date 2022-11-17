@@ -181,11 +181,11 @@ public class ClientThread extends Thread {
                         break;
 
                     case "deleteMessage":
-                        String deleteId_Message = ((String) this.inputStream.readUTF());
+                        int deleteId_Message = this.inputStream.readInt();
                         System.out.format("Delete id: %s \n", deleteId_Message);
 
                         synchronized (this) {
-                            if (this.deleteMessage(Integer.parseInt(deleteId_Message ))) {
+                            if (this.deleteMessage(deleteId_Message)) {
                                 outputStream.writeUTF("Successfully Deleted");
                                 outputStream.flush();
                             } else {
