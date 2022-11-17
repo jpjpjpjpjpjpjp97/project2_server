@@ -118,7 +118,7 @@ public class MessageData {
                 String text = messageResultSet.getString("message.text");
                 int senderId = messageResultSet.getInt("conversation.sender_id");
                 Timestamp created = messageResultSet.getTimestamp("created");
-                messageList.add(new Presentation.Model.Message("individual", text, senderId, receiverId, false));
+                messageList.add(new Presentation.Model.Message("individual", id, text, senderId, receiverId, created, true));
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
@@ -135,9 +135,7 @@ public class MessageData {
                 String text = messageResultSet.getString("message.text");
                 int senderId = messageResultSet.getInt("conversation.sender_id");
                 Timestamp created = messageResultSet.getTimestamp("created");
-                messageList.add(new Presentation.Model.Message("individual",id ,text, senderId, receiverId,created ,false));
-
-
+                messageList.add(new Presentation.Model.Message("individual",id ,text, senderId, receiverId,created ,true));
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
