@@ -4,18 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="caa0a256-b5d5-4893-9969-ed2e7b27b7f8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="caa0a256-b5d5-4893-9969-ed2e7b27b7f8" name="Changes" comment="Add/&#10;Check if user exists">
       <change beforePath="$PROJECT_DIR$/src/Data/ConnectionServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Data/ConnectionServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Data/UserData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Data/UserData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Logic/MessageLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Logic/MessageLogic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Logic/UserLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Logic/UserLogic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Presentation/Controller/MessageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Controller/MessageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Presentation/Controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Presentation/Model/ClientThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Model/ClientThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Presentation/Model/Contact.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Model/Contact.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Presentation/Model/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Model/Message.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Presentation/Model/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Model/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,7 +127,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668221852998</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Add/&#10;Check if user exists">
+      <created>1668708235883</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1668708235883</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -156,7 +153,8 @@
     <MESSAGE value="Fix/&#10;server connection fixes" />
     <MESSAGE value="Add/&#10;List and Filter users" />
     <MESSAGE value="Add/&#10;Separate user classes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add/&#10;Separate user classes" />
+    <MESSAGE value="Add/&#10;Check if user exists" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add/&#10;Check if user exists" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
