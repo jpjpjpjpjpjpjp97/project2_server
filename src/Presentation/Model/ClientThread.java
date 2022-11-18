@@ -126,7 +126,7 @@ public class ClientThread extends Thread {
 
                     case "addMessage":
                         Message newMessage = ((Message) this.inputStream.readObject());
-                        System.out.format("Message: %s \n", newMessage.toString());
+                        System.out.format("Message: %s | Sender: %s | Receiver: %s \n", newMessage.toString(), newMessage.getSenderId(), newMessage.getReceiverId());
 
                         synchronized (this) {
                             if (this.addMessage(newMessage)) {
