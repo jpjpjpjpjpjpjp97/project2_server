@@ -51,6 +51,7 @@ public class ClientThread extends Thread {
                             outputStream.writeInt(this.authenticate(clientUsername, clientPassword));
                             outputStream.flush();
                         }
+
                         break;
 
                     case "listUsers":
@@ -172,6 +173,20 @@ public class ClientThread extends Thread {
                                 outputStream.flush();
                             } else {
                                 outputStream.writeUTF("Not Deleted");
+                                outputStream.flush();
+                            }
+                        }
+                        break;
+
+                    case "isOnline":
+                        int id = this.inputStream.readInt();
+                        String username = this.inputStream.readUTF();
+                        synchronized (this) {
+                            if (server.isOnline(id, username)) {
+                                outputStream.writeInt(1);
+                                outputStream.flush();
+                            } else {
+                                outputStream.writeInt(0);
                                 outputStream.flush();
                             }
                         }

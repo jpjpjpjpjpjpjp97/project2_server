@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.net.ServerSocket;
+import java.util.Objects;
 
 public class Server {
     private static ServerSocket serverSocket;
@@ -52,15 +53,13 @@ public class Server {
         }
     }
 
-    public void sendMessage(Message message, int receiverId){
-        if (this.isOnline(receiverId)){
+    /*public void sendMessage(Message message, int receiverId){
 
-        }
-    }
+    }*/
 
-    public boolean isOnline(int receiverId){
-        for (ClientThread client : this.clientList) {
-            if (client.getClientId() == receiverId && client.isOnline()){
+    public boolean isOnline(int receiverId , String username){
+        for (ClientThread client : clientList) {
+            if (Objects.equals(client.getClientUsername(), username)){
                 return true;
             }
         }
