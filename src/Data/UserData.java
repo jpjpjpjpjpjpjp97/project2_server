@@ -84,6 +84,18 @@ public class UserData {
         return 0;
     }
 
+    public String getUserUsername(int contactId) {
+        try {
+            ResultSet userResultSet = connection.createStatement().executeQuery("SELECT username FROM user WHERE id='"+ contactId +"';");
+            if (userResultSet.next()) {
+                return userResultSet.getString("username");
+            }
+        }catch (Exception e){
+            logger.error("Exception in connection: "+ e.toString());
+        }
+        return "";
+    }
+
     public int addUser(String name , String password){
             String sql = "INSERT INTO user (username, password , online) VALUES (?, ? , ?);";
             try {

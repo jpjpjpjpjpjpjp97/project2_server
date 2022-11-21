@@ -23,6 +23,9 @@ public class UserController {
     public int getUserId(String contactUsername) {
         return userLogic.getUserId(contactUsername);
     }
+    public String getUserUsername(int contactId) {
+        return userLogic.getUserUsername(contactId);
+    }
     public List<User> listUsers() {
         return userLogic.listUsers();
     }

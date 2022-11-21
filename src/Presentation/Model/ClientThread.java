@@ -72,6 +72,13 @@ public class ClientThread extends Thread {
                         outputStream.flush();
                         break;
 
+                    case "getUsernameForId":
+                        int contactId = this.inputStream.readInt();
+                        String contactUsername1 = this.getUserUsername(contactId);
+                        outputStream.writeUTF(contactUsername1);
+                        outputStream.flush();
+                        break;
+
                     case "registerUser":
                         String newUserName = ((String) this.inputStream.readUTF());
                         String newPassword = ((String) this.inputStream.readUTF());
@@ -209,7 +216,6 @@ public class ClientThread extends Thread {
         }
     }
 
-
     private int authenticate(String clientName, String clientPassword) {
         return userController.authenticate(clientUsername, clientPassword);
     }
@@ -252,7 +258,9 @@ public class ClientThread extends Thread {
         return userController.getUserId(contactUsername);
     }
 
-
+    private String getUserUsername(int contactId) {
+        return userController.getUserUsername(contactId);
+    }
 
     private int registerUser(String username, String password) {
         return userController.registerUser(username, password);
